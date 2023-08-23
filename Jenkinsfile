@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'nginx' // Az alkalmazás futtatásához használt Docker image (pl. nginx)
+        }
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -7,9 +11,11 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build and Test') {
+        stage('Run App in Docker') {
             steps {
-                // Futtathatsz teszteket és build lépéseket itt
+                // Itt beállíthatod a környezeti változókat, szükséges konfigurációkat
+                // Majd indíthatod az alkalmazást a Docker konténerben
+                sh 'docker run -d -p 8080:80 -v $(pwd):/usr/share/nginx/html nginx'
             }
         }
     }
